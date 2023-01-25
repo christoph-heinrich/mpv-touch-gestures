@@ -3,6 +3,7 @@
 --
 -- Low latency detection of single-click, double-click, long-click and dragging.
 
+local assdraw = require('mp.assdraw')
 local options = require('mp.options')
 local msg = require('mp.msg')
 
@@ -14,6 +15,8 @@ options.read_options(opts, 'touch')
 if opts.horizontal_drag ~= 'playlist' and opts.horizontal_drag ~= 'seek' then
     msg.error('The option "horizontal_drag" supports the values "playlist" and "seek"')
 end
+
+local osd = mp.create_osd_overlay('ass-events')
 
 local uosc = false
 local osd_pref = 'osd-auto'
@@ -34,8 +37,45 @@ local ds_vol = nil
 local ds_vol_max = nil
 local ds_speed = nil
 
+function opacity_to_alpha(opacity)
+	return 255 - math.ceil(255 * math.min(opacity, 1))
+end
+
+local function render_playlist()
+    local ass = assdraw.ass_new()
+
+    local height = 720
+    local width = ds_w/ds_h * height
+
+    local vert_pos, rotation
+    if drag_total > 0 then
+        vert_pos = 0.1
+        rotation = 180
+    else
+        vert_pos = 0.9
+        rotation = 0
+    end
+
+    local opacity = math.max((math.abs(drag_total) - 80 * scale) / 100, 0)
+
+    ass:pos(width * vert_pos, 360)
+    local f = '{\\fnmonospace\\fs200\\bord2\\an6\\frz%d\\alpha&H%X&}\226\158\156'
+    ass:append(string.format(f , rotation, opacity_to_alpha(opacity)))
+
+    if osd.res_x == width and osd.data == ass.text then
+        return
+    end
+    osd.res_x = width
+    osd.res_y = height
+    osd.data = ass.text
+    osd.hidden = false
+    osd.z = 1000
+    osd:update()
+end
+
 local function drag_playlist(dx)
     drag_total = drag_total + dx
+    render_playlist()
 end
 local function drag_playlist_end()
     if math.abs(drag_total) < (80 * scale) then return end
@@ -129,6 +169,9 @@ local function drag_end()
     ds_speed = nil
     ds_time = nil
     ds_dur = nil
+    osd.data = ''
+    osd.hidden = true
+    osd:update()
 end
 
 local function double()
