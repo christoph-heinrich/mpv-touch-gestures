@@ -14,7 +14,7 @@ Also works with mouse input, but the primary focus is touch.
 * Double click/tap on the middle third cycles fullscreen.
 * Drag/swipe vertical on the left half to change speed.
 * Drag/swipe vertical on the right half to change volume.
-* Drag/swipe horizontal to seek.
+* Drag/swipe horizontal to seek or to go to the previous/next playlist item.
 * [uosc](https://github.com/tomasklaen/uosc) integration
 
 ## Installation
@@ -22,4 +22,11 @@ Also works with mouse input, but the primary focus is touch.
 1. Install [pointer-event](https://github.com/christoph-heinrich/mpv-pointer-event)
 2. Save the `touch-gestures.lua` into your [scripts directory](https://mpv.io/manual/stable/#script-location)
 3. Save the `pointer-event.conf` into your `script-opts` directory (next to the [scripts directory](https://mpv.io/manual/stable/#script-location), create if it doesn't exist)
+4. **(optional)** Create a `touch-gestures.conf` in your `script-opts` directory to choose between seeking and changing playlist item when swiping horizontally.
+```
+horizontal_drag=seek
+or
+horizontal_drag=playlist
+```
+
 The preconfigured `margin_*` values in `pointer-event.conf` work well with the default configuration of [uosc](https://github.com/tomasklaen/uosc).

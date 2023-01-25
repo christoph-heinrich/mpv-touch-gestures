@@ -3,10 +3,29 @@
 --
 -- Low latency detection of single-click, double-click, long-click and dragging.
 
+local options = require('mp.options')
+local msg = require('mp.msg')
+
+local opts = {
+    horizontal_drag = 'playlist',
+}
+options.read_options(opts, 'touch')
+
+if opts.horizontal_drag ~= 'playlist' and opts.horizontal_drag ~= 'seek' then
+    msg.error('The option "horizontal_drag" supports the values "playlist" and "seek"')
+end
+
 local uosc = false
 local osd_pref = 'osd-auto'
 
+local scale = 1
+mp.observe_property('display-hidpi-scale', 'number', function(_, val)
+    if val == nil then scale = 1
+    else scale = val end
+end)
+
 local drag_total = 0
+-- ds is short for drag_start
 local ds_w = nil
 local ds_h = nil
 local ds_time = nil
@@ -14,6 +33,18 @@ local ds_dur = nil
 local ds_vol = nil
 local ds_vol_max = nil
 local ds_speed = nil
+
+local function drag_playlist(dx)
+    drag_total = drag_total + dx
+end
+local function drag_playlist_end()
+    if math.abs(drag_total) < (80 * scale) then return end
+    if drag_total > 0 then
+        mp.command('script-binding uosc/prev')
+    else
+        mp.command('script-binding uosc/next')
+    end
+end
 
 local time = nil
 local function seek(fast)
@@ -65,9 +96,13 @@ local function drag_init(dx, dy)
             return 'speed'
         end
     else
-        ds_time = mp.get_property_number('playback-time')
-        ds_dur = mp.get_property_number('duration')
-        return 'seek'
+        if opts.horizontal_drag == 'playlist' then
+            return 'playlist'
+        elseif opts.horizontal_drag == 'seek' then
+            ds_time = mp.get_property_number('playback-time')
+            ds_dur = mp.get_property_number('duration')
+            return 'seek'
+        end
     end
 end
 
@@ -76,6 +111,7 @@ local function drag(dx, dy)
     if not drag_kind then drag_kind = drag_init(dx, dy) end
     if drag_kind == 'volume' then drag_volume(dy)
     elseif drag_kind == 'speed' then drag_speed(dy)
+    elseif drag_kind == 'playlist' then drag_playlist(dx)
     elseif drag_kind == 'seek' then drag_seek(dx)
     end
 end
@@ -86,6 +122,7 @@ local function drag_start()
 end
 
 local function drag_end()
+    if drag_kind == 'playlist' then drag_playlist_end() end
     drag_total = 0
     ds_vol = nil
     ds_vol_max = nil
