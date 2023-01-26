@@ -1,7 +1,7 @@
--- pointer-event 1.1.1 - 2023-Jan-01
--- https://github.com/christoph-heinrich/mpv-pointer-event
+-- touch-gestures 1.0.0 - 2023-Jan-26
+-- https://github.com/christoph-heinrich/mpv-touch-gestures
 --
--- Low latency detection of single-click, double-click, long-click and dragging.
+-- Touch gestures for mpv
 
 local assdraw = require('mp.assdraw')
 local options = require('mp.options')
@@ -198,6 +198,6 @@ mp.register_script_message('uosc-version', function(version)
     version = tonumber((version:gsub('%.', '')))
     ---@diagnostic disable-next-line: cast-local-type
     uosc = version and version >= 400
-if uosc then osd_pref = 'no-osd' end
+    if uosc then osd_pref = 'no-osd' end
 end)
 mp.commandv('script-message-to', 'uosc', 'get-version', mp.get_script_name())
