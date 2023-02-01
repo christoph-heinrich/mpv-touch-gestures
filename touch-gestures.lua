@@ -10,7 +10,7 @@ local msg = require('mp.msg')
 local opts = {
     horizontal_drag = 'playlist',
 }
-options.read_options(opts, 'touch')
+options.read_options(opts, 'touch-gestures')
 
 if opts.horizontal_drag ~= 'playlist' and opts.horizontal_drag ~= 'seek' then
     msg.error('The option "horizontal_drag" supports the values "playlist" and "seek"')
