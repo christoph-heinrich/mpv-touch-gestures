@@ -102,7 +102,7 @@ local function drag_seek(dx)
     if opts.proportional_seek == 'yes' then
         time = math.max(drag_total / ds_w * ds_dur * opts.seek_scale + ds_time, 0)
     else
-        time = math.max(drag_total * opts.seek_scale + ds_time, 0)
+        time = math.max(drag_total * opts.seek_scale / scale + ds_time, 0)
     end
 
     if ds_w / ds_dur < 10 then
