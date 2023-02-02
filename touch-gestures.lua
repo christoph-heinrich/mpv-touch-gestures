@@ -9,6 +9,8 @@ local msg = require('mp.msg')
 
 local opts = {
     horizontal_drag = 'playlist',
+    proportional_seek = 'yes',
+    seek_scale = 1,
 }
 options.read_options(opts, 'touch-gestures')
 
@@ -96,7 +98,13 @@ seek_timer:kill()
 local function drag_seek(dx)
     if not ds_dur then return end
     drag_total = drag_total + dx
-    time = math.max(drag_total / ds_w * ds_dur + ds_time, 0)
+
+    if opts.proportional_seek == 'yes' then
+        time = math.max(drag_total / ds_w * ds_dur * opts.seek_scale + ds_time, 0)
+    else
+        time = math.max(drag_total * opts.seek_scale / scale + ds_time, 0)
+    end
+
     if ds_w / ds_dur < 10 then
         -- Perform a fast seek while moving around and an exact seek afterwards
         seek(true)
