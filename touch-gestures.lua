@@ -1,4 +1,4 @@
--- touch-gestures 1.0.0 - 2023-Jan-26
+-- touch-gestures 1.1.0 - 2023-Feb-03
 -- https://github.com/christoph-heinrich/mpv-touch-gestures
 --
 -- Touch gestures for mpv
