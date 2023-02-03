@@ -82,9 +82,9 @@ end
 local function drag_playlist_end()
     if math.abs(drag_total) < (80 * scale) then return end
     if drag_total > 0 then
-        mp.command('script-binding uosc/prev')
+        mp.command(uosc and 'script-binding uosc/prev' or 'playlist-prev')
     else
-        mp.command('script-binding uosc/next')
+        mp.command(uosc and 'script-binding uosc/next' or 'playlist-next')
     end
 end
 
