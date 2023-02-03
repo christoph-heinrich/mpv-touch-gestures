@@ -22,11 +22,6 @@ Also works with mouse input, but the primary focus is touch.
 1. Install [pointer-event](https://github.com/christoph-heinrich/mpv-pointer-event)
 2. Save the `touch-gestures.lua` into your [scripts directory](https://mpv.io/manual/stable/#script-location)
 3. Save the `pointer-event.conf` into your `script-opts` directory (next to the [scripts directory](https://mpv.io/manual/stable/#script-location), create if it doesn't exist)
-4. **(optional)** Create a `touch-gestures.conf` in your `script-opts` directory to choose between seeking and changing playlist item when swiping horizontally.
-```
-horizontal_drag=seek
-or
-horizontal_drag=playlist
-```
+4. **(optional)** Save the `touch-gestures.conf` into your `script-opts` directory
 
 The preconfigured `margin_*` values in `pointer-event.conf` work well with the default configuration of [uosc](https://github.com/tomasklaen/uosc).

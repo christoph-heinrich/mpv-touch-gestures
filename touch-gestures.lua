@@ -9,7 +9,7 @@ local msg = require('mp.msg')
 
 local opts = {
     horizontal_drag = 'playlist',
-    proportional_seek = 'yes',
+    proportional_seek = true,
     seek_scale = 1,
 }
 options.read_options(opts, 'touch-gestures')
@@ -99,7 +99,7 @@ local function drag_seek(dx)
     if not ds_dur then return end
     drag_total = drag_total + dx
 
-    if opts.proportional_seek == 'yes' then
+    if opts.proportional_seek then
         time = math.max(drag_total / ds_w * ds_dur * opts.seek_scale + ds_time, 0)
     else
         time = math.max(drag_total * opts.seek_scale / scale + ds_time, 0)
